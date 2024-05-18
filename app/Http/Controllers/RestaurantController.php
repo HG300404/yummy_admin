@@ -80,7 +80,7 @@ class RestaurantController extends Controller
         if (!$item) {
             return response()->json(["status" => "error", "message" => "ID không tồn tại"]);
         } else {
-            $user->delete();
+            $item->delete();
             return response()->json(["status" => "success", "message" => "Xoá thành công"]);
         }
     }

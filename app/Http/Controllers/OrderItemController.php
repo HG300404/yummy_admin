@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\OrdersItems;
 use App\Models\Dishes;
 use Illuminate\Support\Facades\Schema;
 
@@ -10,33 +11,58 @@ class OrderItemController extends Controller
 {
     function create(Request $request)
     {
-        if (!$request->dish_id || !$request->quantity || !$request->price || !$request->ship) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin 1"]);
+        if (!$request->order_id || !$request->dishes ) {
+            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin "]);
         } else {
-            $item = new Orders;
-            $item->user_id = $request->input("user_id");
-            $item->restaurant_id = $request->input("restaurant_id");
-            $item->price = $request->input("price");
-            $item->ship = $request->input('ship');
-            $item->discount = $request->input("discount");
-            $item->total_amount = $request->input('total_amount');
-            $item->save();            
+            foreach ($request->dishes as $index => $dishData) {
+                $item_id = $dishData['item_id'];
+                $dish = Dishes::find($item_id);
+
+                if (!$dish) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Không tìm thấy id món ăn đó ' . $index
+                    ]);
+                }
+            
+                $item = new OrdersItems;
+                $item->order_id = $request->input("order_id");
+                $item->item_id  = $item_id;
+                $item->quantity = $dishData["quantity"];
+                $item->options = $dishData["options"];
+                $item->save();            
+            }
+
             return response()->json(["status" => "success", "message" => "Đặt hàng thành công"]);
         }
     }
 
-    function getAll(Request $request)
+    function getAll(string $order_id)
     {
-        $list = Orders::query();
-        $list = $list->get();
+        $list_item = OrdersItems::where('order_id', $order_id)->get();
+
+        $list = [];
+
+        foreach ($list_item as $item) {
+                array_push($list, [
+                    'order_id' => $item->order_id,
+            'item_id' => $item->item_id,
+            'quantity' => $item->quantity,
+            'options' => $item->options
+                ]);
+            }
+
         return response()->json($list);
 
     }
+    
 
-    function getItem(string $id)
+    function getItem(string $order_id, string $item_id)
     {
         try {
-            $item = Orders::findOrFail($id);
+            $item = OrdersItems::where('order_id', $order_id)
+            ->where('item_id', $item_id)->firstOrFail();
+
             return response()->json($item);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(["status" => "error", "message" => 'ID không tồn tại']);
@@ -44,29 +70,32 @@ class OrderItemController extends Controller
 
     }
 
+
     function update(Request $request)
     {
         try {
-            $item = Orders::findOrFail($request->id);
+                $item = OrdersItems::where('order_id', $request->input("order_id"))
+                    ->where('item_id', $request->input("old_item_id")) ->firstOrFail();
 
-            if ($request->restaurant_id) {
-                $item->restaurant_id = $request->input("restaurant_id");
+                $dish_id = $request->input("item_id");
+                $dish = Dishes::find($dish_id);
+
+                if (!$dish) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Không tìm thấy id món ăn đó ' . $index
+                    ]);
+                } 
+
+            if ($request->item_id) {
+                $item->item_id = $request->input("item_id");
             }
-            if ($request->user_id) {
-                $item->user_id = $request->input("user_id");
+            if ($request->quantity) {
+                $item->quantity = $request->input("quantity");
             }
-            if ($request->price ) {
-                $item->price = $request->input("price");
+            if ($request->options) {
+                $item->options  = $request->input("options");
             }
-            if ($request->ship) {
-                $item->ship = $request->input("ship");
-            }
-            // if ($request->discount) {
-                $item->discount = $request->input("discount");
-            // }
-            // if ($request->total_amount) {
-                $item->total_amount = $request->input("total_amount");
-            // }
             $item->update();
 
             return response()->json(['status' => "SUCCESS", "data" => $item]);
@@ -76,9 +105,22 @@ class OrderItemController extends Controller
         }
 
     }
-    function delete(string $id)
+
+    function delete(string $order_id, string $item_id)
     {
-        $item = Orders::where('id', $id)->first();
+        $item = OrdersItems::where('order_id', $order_id)
+                    ->where('item_id', $item_id)
+                    ->firstOrFail();
+        if (!$item) {
+            return response()->json(["status" => "error", "message" => "ID không tồn tại"]);
+        } else {
+            $item->delete();
+            return response()->json(["status" => "success", "message" => "Xoá thành công"]);
+        }
+    }
+    function deleteAll(string $order_id)
+    {
+        $item = OrdersItems::where('order_id', $order_id);
         if (!$item) {
             return response()->json(["status" => "error", "message" => "ID không tồn tại"]);
         } else {
@@ -95,8 +137,8 @@ class OrderItemController extends Controller
             if (empty($input)) {
                 return ["status" => "error", 'message' => 'Vui lòng nhập từ khoá tìm kiếm'];
             } else {
-                $results = Orders::where(function ($query) use ($input) {
-                    $columns = Schema::getColumnListing('orders');
+                $results = OrdersItems::where(function ($query) use ($input) {
+                    $columns = Schema::getColumnListing('orderitems');
                     foreach ($columns as $column) {
                         $query->orWhere($column, 'like', '%' . $input . '%');
                     }

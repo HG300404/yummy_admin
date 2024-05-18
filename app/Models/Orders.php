@@ -16,6 +16,7 @@ class Orders extends Model
         'price',
         'ship',
         'discount',
+        "payment",
         'total_amount'
     ];
 }

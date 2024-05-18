@@ -13,8 +13,8 @@ class OrderController extends Controller
 {
     function create(Request $request)
     {
-        if (!$request->user_id || !$request->restaurant_id || !$request->price || !$request->ship) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin 1"]);
+        if (!$request->user_id || !$request->restaurant_id || !$request->price || !$request->ship || !$request->payment) {
+            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin "]);
         } else {
             $item = new Orders;
             $item->user_id = $request->input("user_id");
@@ -23,6 +23,7 @@ class OrderController extends Controller
             $item->ship = $request->input('ship');
             $item->discount = $request->input("discount");
             $item->total_amount = $request->input('total_amount');
+            $item->payment = $request->input('payment');
             $item->save();            
             return response()->json(["status" => "success", "message" => "Đặt hàng thành công"]);
         }
@@ -70,6 +71,9 @@ class OrderController extends Controller
             // if ($request->total_amount) {
                 $item->total_amount = $request->input("total_amount");
             // }
+            if ($request->payment) {
+                $item->payment = $request->input("payment");
+            }
             $item->update();
 
             return response()->json(['status' => "SUCCESS", "data" => $item]);
@@ -85,7 +89,7 @@ class OrderController extends Controller
         if (!$item) {
             return response()->json(["status" => "error", "message" => "ID không tồn tại"]);
         } else {
-            $user->delete();
+            $item->delete();
             return response()->json(["status" => "success", "message" => "Xoá thành công"]);
         }
     }
