@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Restaurants;
 use App\Models\User;
 use App\Models\Orders;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class OrderController extends Controller
@@ -34,6 +35,33 @@ class OrderController extends Controller
         $list = Orders::query();
         $list = $list->get();
         return response()->json($list);
+
+    }
+
+
+    function getTopRestaurant(Request $request)
+    {        
+        try {
+            $list_item = Orders::select('restaurant_id', DB::raw('count(*) as total'))
+            ->groupBy('restaurant_id')
+            ->orderBy('total', 'desc')
+            ->get();
+
+            $list = [];
+            foreach ($list_item as $item) {
+                $res_name = Restaurants::where('id', $item->restaurant_id)->first();
+                        array_push($list, [
+                            'restaurant_name' => $res_name->name,
+                            'address' => $res_name->address,
+                            'open' => $res_name->opening_hours,
+                        ]);
+                       }
+                    
+            return response()->json($list);
+      
+        } catch (\Exception $e) {
+            return response()->json(["status" => "error", "message" => 'Có lỗi xảy ra khi tải dữ liệu']);
+        }
 
     }
 

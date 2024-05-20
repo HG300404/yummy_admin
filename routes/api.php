@@ -36,6 +36,7 @@ Route::get('restaurant/search/{input}', [RestaurantController::class, 'search'])
 //Dish
 Route::post('dish/create', [DishController::class, 'create']);
 Route::get('dish/getAll', [DishController::class, 'getAll']);
+Route::get('dish/getRecent', [DishController::class, 'getRecent']);
 Route::get('dish/getItem/{id}', [DishController::class, 'getItem']);
 Route::put('dish/update', [DishController::class, 'update']);
 Route::delete('dish/delete/{id}', [DishController::class, 'delete']);
@@ -46,6 +47,7 @@ Route::get('dish/search/{input}', [DishController::class, 'search']);
 Route::post('order/create', [OrderController::class, 'create']);
 Route::get('order/getAll', [OrderController::class, 'getAll']);
 Route::get('order/getItem/{id}', [OrderController::class, 'getItem']);
+Route::get('order/getTopRestaurant', [OrderController::class, 'getTopRestaurant']);
 Route::put('order/update', [OrderController::class, 'update']);
 //Route::post('getOrderByUserDate/{user_id}/{date}', [OrderController::class, 'getOrderByUserDate']);
 Route::delete('order/delete/{id}', [OrderController::class, 'delete']);

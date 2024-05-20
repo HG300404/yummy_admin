@@ -28,12 +28,61 @@ class DishController extends Controller
 
     function getAll(Request $request)
     {
-        $list = Dishes::query();
-        $list = $list->get();
-        return response()->json($list);
+        try {
+            $list_item = Dishes::orderBy('rate', 'desc')->get();
+            $list = [];
+            foreach ($list_item as $item) {
+                $res_name = Restaurants::where('id', $item->restaurant_id)->first();
+                        array_push($list, [
+                            'id' => $item->id,
+                            'restaurant_name' => $res_name->name,
+                            'name' => $item->name,
+                            'img' => $item->img,
+                            'price' =>$item->price,
+                            'rate' =>$item->rate,
+                            'type' =>$item->type,
+                            'created_at' => $item->created_at,
+                            'updated_at' =>$item->updated_at,
+                        ]);
+                       }
+                    
+            return response()->json($list);
+      
+        } catch (\Exception $e) {
+            return response()->json(["status" => "error", "message" => 'Có lỗi xảy ra khi tải dữ liệu']);
+        }
 
     }
 
+    function getRecent(Request $request)
+    {
+        try {
+            $list_item = Dishes::orderBy('created_at', 'desc')->get();
+            $list = [];
+            foreach ($list_item as $item) {
+                $res_name = Restaurants::where('id', $item->restaurant_id)->first();
+                        array_push($list, [
+                            'id' => $item->id,
+                            'restaurant_name' => $res_name->name,
+                            'name' => $item->name,
+                            'img' => $item->img,
+                            'price' =>$item->price,
+                            'rate' =>$item->rate,
+                            'type' =>$item->type,
+                            'created_at' => $item->created_at,
+                            'updated_at' =>$item->updated_at,
+                        ]);
+                       }
+                    
+            return response()->json($list);
+      
+        } catch (\Exception $e) {
+            return response()->json(["status" => "error", "message" => 'Có lỗi xảy ra khi tải dữ liệu']);
+        }
+
+    }
+
+    
     function getItem(string $id)
     {
         try {
