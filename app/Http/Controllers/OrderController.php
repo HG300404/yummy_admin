@@ -51,6 +51,7 @@ class OrderController extends Controller
             foreach ($list_item as $item) {
                 $res_name = Restaurants::where('id', $item->restaurant_id)->first();
                         array_push($list, [
+                            'id' => $res_name->id,
                             'restaurant_name' => $res_name->name,
                             'address' => $res_name->address,
                             'open' => $res_name->opening_hours,
