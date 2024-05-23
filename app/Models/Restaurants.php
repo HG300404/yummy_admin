@@ -14,7 +14,8 @@ class Restaurants extends Model
         'name',
         'address',
         'phone',
-        'opening_hours'
+        'opening_hours',
+        'user_id'
     ];
 
 }

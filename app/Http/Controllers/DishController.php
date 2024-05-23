@@ -49,7 +49,7 @@ class DishController extends Controller
             return response()->json($list);
       
         } catch (\Exception $e) {
-            return response()->json(["status" => "error", "message" => 'Có lỗi xảy ra khi tải dữ liệu']);
+            return response()->json(["status" => "error", "message" => 'Error']);
         }
 
     }
@@ -87,6 +87,19 @@ class DishController extends Controller
     {
         try {
             $item = Dishes::findOrFail($id);
+            // $list = [];
+            // $res_name = Restaurants::where('id', $item->restaurant_id)->first();
+            //             array_push($list, [
+            //                 'id' => $item->id,
+            //                 'restaurant_name' => $res_name->name,
+            //                 'name' => $item->name,
+            //                 'img' => $item->img,
+            //                 'price' =>$item->price,
+            //                 'rate' =>$item->rate,
+            //                 'type' =>$item->type,
+            //                 'created_at' => $item->created_at,
+            //                 'updated_at' =>$item->updated_at,
+            //             ]);
             return response()->json($item);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(["status" => "error", "message" => 'ID không tồn tại']);
@@ -99,9 +112,11 @@ class DishController extends Controller
         try {
             $item = Dishes::findOrFail($request->id);
 
-            if ($request->restaurant_id) {
-                $item->restaurant_id = $request->input("restaurant_id");
-            }
+            // if ($request->restaurant_id && $request->restaurant_name) {
+            //     $item1 = Restaurant::findOrFail($request->restaurant_id);
+            //     $item1->name = $request->input("restaurant_name");
+            //     $item1->update();
+            // }
             if ($request->name) {
                 $item->name = $request->input("name");
             }

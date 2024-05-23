@@ -11,7 +11,7 @@ class UserController extends Controller
     function register(Request $request)
     {
         if (!$request->email || !$request->password) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin"]);
+            return response()->json(["status" => "error", "message" => "Enter missing information"]);
         } else {
             $user = new User;
             $user->name = $request->input("name");
@@ -19,7 +19,7 @@ class UserController extends Controller
             $user->address = $request->input("address");
             $check = User::where('email', $request->email)->first();
             if ($check) {
-                return ["status" => "error", "message" => "Email đã tồn tại"];
+                return ["status" => "error", "message" => "Email exist"];
             } else {
                 $user->email = $request->input("email");
             }
@@ -35,13 +35,13 @@ class UserController extends Controller
     function login(Request $request)
     {
         if (!$request->email || !$request->password) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin"]);
+            return response()->json(["status" => "error", "message" => "Enter missing information"]);
         } else {
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json(["status" => "error", "message" => "Email không tồn tại"]);
+                return response()->json(["status" => "error", "message" => "Email not exist"]);
             } else if (!Hash::check($request->password, $user->password)) {
-                return response()->json(["status" => "error", "message" => "Mật khẩu sai"]);
+                return response()->json(["status" => "error", "message" => "Wrong password"]);
             }
             return response()->json(["status" => "success", "user" => $user]);
         }
@@ -140,7 +140,7 @@ class UserController extends Controller
     function search(string $input)
     {
         if (empty($input)) {
-            return ["status" => "error", 'message' => 'Vui lòng nhập từ khoá tìm kiếm'];
+            return ["status" => "error", 'message' => 'Not input to search'];
         } else {
             $results = User::where(function ($query) use ($input) {
                 $columns = Schema::getColumnListing('users');
@@ -150,7 +150,7 @@ class UserController extends Controller
             })->get();
         
             if ($results->isEmpty()) {
-                return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
+                return ["status" => "success", 'message' => 'Not infor'];
             } else {
                 return $results;
             }

@@ -31,7 +31,7 @@ Route::get('restaurant/getItem/{id}', [RestaurantController::class, 'getItem']);
 Route::put('restaurant/update', [RestaurantController::class, 'update']);
 Route::delete('restaurant/delete/{id}', [RestaurantController::class, 'delete']);
 Route::get('restaurant/search/{input}', [RestaurantController::class, 'search']);
-
+Route::get('restaurant/searchColumn/{label}/{input}', [RestaurantController::class, 'searchColumn']);
 
 //Dish
 Route::post('dish/create', [DishController::class, 'create']);
