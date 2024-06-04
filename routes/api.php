@@ -8,6 +8,7 @@ use App\Http\Controllers\DishController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CartController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -79,10 +80,10 @@ Route::get('comment/search/{input}', [ReviewController::class, 'search']);
 
 
 // //Cart
-// Route::post('getQuantity', [CartController::class, 'getQuantity']);
-// Route::post('addCart', [CartController::class, 'addCart']);
-// Route::post('getItemCart', [CartController::class, 'getItemCart']);
-// Route::delete('removeItemCart', [CartController::class, 'removeItemCart']);
+Route::post('cart/create', [CartController::class, 'create']);
+Route::get('cart/getAll/{user_id}/{restaurant_id}', [CartController::class, 'getAll']);
+Route::put('cart/update', [CartController::class, 'update']);
+Route::delete('cart/delete/{id}', [CartController::class, 'delete']);
 // Route::delete('removeAllCart', [CartController::class, 'removeAllCart']);
 // Route::post('changeAmount', [CartController::class, 'changeAmount']);
 

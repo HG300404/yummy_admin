@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\Restaurants;
 use App\Models\User;
+use App\Models\Dishes;
+use App\Models\Reviews;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
 
@@ -41,8 +43,23 @@ class RestaurantController extends Controller
     function getItem(string $id)
     {
         try {
-            $item = Restaurants::findOrFail($id);
-            return response()->json($item);
+            $res = Restaurants::findOrFail($id);
+            $list_item = Dishes::where('restaurant_id', $id)->get();
+            
+            $totalRate = 0;
+            $reviewCount = 0;
+
+            foreach ($list_item as $item) {
+                $review = Reviews::where('item_id', $item->id)->get();
+                $totalRate += $review->sum('rating');
+                $reviewCount += $review->count();
+            }
+               
+            
+            $res->setAttribute('total_rate', $totalRate / $reviewCount);
+            $res->setAttribute('review_count', $reviewCount);
+
+            return response()->json($res);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(["status" => "error", "message" => 'ID not exist']);
         }
