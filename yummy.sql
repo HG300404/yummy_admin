@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2024 at 06:07 PM
+-- Generation Time: Jun 04, 2024 at 05:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -57,8 +57,18 @@ CREATE TABLE `carts` (
   `item_id` bigint(20) UNSIGNED NOT NULL,
   `quantity` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `restaurant_id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`id`, `user_id`, `item_id`, `quantity`, `created_at`, `updated_at`, `restaurant_id`) VALUES
+(1, 5, 3, 2, '2024-05-30 12:54:26', '2024-05-30 12:54:26', 1),
+(2, 5, 5, 2, '2024-05-30 12:55:00', '2024-05-30 12:55:00', 1),
+(3, 1, 5, 2, '2024-05-30 13:01:08', '2024-05-30 13:01:08', 1);
 
 -- --------------------------------------------------------
 
@@ -340,8 +350,8 @@ ALTER TABLE `cache_locks`
 --
 ALTER TABLE `carts`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `carts_user_id_foreign` (`user_id`),
-  ADD KEY `carts_item_id_foreign` (`item_id`);
+  ADD KEY `carts_item_id_foreign` (`item_id`),
+  ADD KEY `carts_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `dishes`
@@ -423,12 +433,6 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `carts`
---
-ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `dishes`
 --
 ALTER TABLE `dishes`
@@ -490,8 +494,8 @@ ALTER TABLE `users`
 -- Constraints for table `carts`
 --
 ALTER TABLE `carts`
-  ADD CONSTRAINT `carts_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `dishes` (`id`),
-  ADD CONSTRAINT `carts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `carts_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `dishes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `carts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `dishes`
