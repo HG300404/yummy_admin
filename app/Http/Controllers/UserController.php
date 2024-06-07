@@ -29,7 +29,7 @@ class UserController extends Controller
             $user->level = 1;
             $user->coin = 0;
             $user->save();            
-            return response()->json(["status" => "success", "message" => "Đăng ký thành công"]);
+            return response()->json(["status" => "success", "message" => "Đăng ký thành công", "user" => $user]);
         }
     }
     function login(Request $request)

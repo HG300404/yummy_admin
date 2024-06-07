@@ -14,7 +14,6 @@ class CartController extends Controller
         if (!$request->user_id || !$request->item_id || !$request->restaurant_id || !$request->quantity) {
             return response()->json(["status" => "error", "message" => "Enter full infor"]);
         } else {
-
             $item = new Cart;
             $item->user_id = $request->input("user_id");
             $item->item_id = $request->input("item_id");
@@ -38,6 +37,7 @@ class CartController extends Controller
             foreach ($list_item as $item) {
                 $dish = Dishes::where('id', $item->item_id)->first();
                         array_push($list, [
+                            'dish_id' => $dish->id,
                             'dish_name' => $dish->name,
                             'dish_price' => $dish->price,
                             'dish_img' => $dish->img,
@@ -59,6 +59,7 @@ class CartController extends Controller
     {
         try {
             $item = Cart::where('user_id', $request->user_id)->
+            where('restaurant_id', $request->restaurant_id)->
             where('item_id', $request->item_id)->first();
 
             if ($request->quantity) {
@@ -73,10 +74,12 @@ class CartController extends Controller
         }
 
     }
-    function delete(string $user_id, string $item_id)
+    function delete(int $user_id, int $restaurant_id, int $item_id)
     {
-        $item = Cart::where('user_id', $request->user_id)->
-        where('item_id', $request->item_id)->first();
+        $item = Cart::where('user_id', $user_id)->
+            where('restaurant_id', $restaurant_id)->
+            where('item_id', $item_id)->first();
+
         if (!$item) {
             return response()->json(["status" => "error", "message" => "ID not exist"]);
         } else {

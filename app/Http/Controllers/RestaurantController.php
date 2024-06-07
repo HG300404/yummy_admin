@@ -12,7 +12,7 @@ class RestaurantController extends Controller
 {
     function create(Request $request)
     {
-        if (!$request->name || !$request->address || !$request->phone || !$request->opening_hours || $request->user_id) {
+        if (!$request->name || !$request->address || !$request->phone || !$request->opening_hours || !$request->user_id) {
             return response()->json(["status" => "error", "message" => "Not enough infor"]);
         } else {
             $item = new Restaurants;
@@ -44,16 +44,13 @@ class RestaurantController extends Controller
     {
         try {
             $res = Restaurants::findOrFail($id);
-            $list_item = Dishes::where('restaurant_id', $id)->get();
             
             $totalRate = 0;
             $reviewCount = 0;
 
-            foreach ($list_item as $item) {
-                $review = Reviews::where('item_id', $item->id)->get();
-                $totalRate += $review->sum('rating');
-                $reviewCount += $review->count();
-            }
+            $review = Reviews::where('restaurant_id', $id)->get();
+            $totalRate += $review->sum('rating');
+            $reviewCount += $review->count();
                
             
             $res->setAttribute('total_rate', $totalRate / $reviewCount);

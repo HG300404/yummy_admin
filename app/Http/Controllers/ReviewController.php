@@ -99,29 +99,22 @@ class ReviewController extends Controller
     }
 
     
-    function getItemByRestaurant(string $restaurant_id)
+    function getItemByRestaurant(string $user_id)
     {
         try {
-            $list_item = Dishes::where('restaurant_id', $restaurant_id)->get();
-            if ($list_item->count() === 0){
-                return response()->json(["status" => "success", "message" => 'Không có dữ liệu']);
-            } else {
-                $list = [];
-
-                foreach ($list_item as $item) {
-                       $review = Reviews::where('item_id', $item->id)->get();
-                       foreach ($review as $item1){
-                        $user = User::where('id', $item1->user_id)->firstOrFail();
-                        array_push($list, [
-                            'dish' => $item->name,
-                            'rating' =>$item1->rating,
-                            'user_name' => $user->name,
-                            'comment' => $item1->comment
-                        ]);
-                       }
-                    }
-                    return response()->json($list);
-            }
+            $id = Restaurants::where('user_id', $user_id)->first()->id;
+            $list = [];
+            $review = Reviews::where('restaurant_id', $id)->get();
+            foreach ($review as $item1){
+                $user = User::where('id', $item1->user_id)->firstOrFail();
+                array_push($list, [
+                    'rating' =>$item1->rating,
+                    'user_name' => $user->name,
+                    'comment' => $item1->comment,
+                    'created_at' => $item1->created_at,
+                ]);
+             }
+            return response()->json($list);
            
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(["status" => "error", "message" => 'ID không tồn tại']);

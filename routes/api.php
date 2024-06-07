@@ -43,11 +43,11 @@ Route::put('dish/update', [DishController::class, 'update']);
 Route::delete('dish/delete/{id}', [DishController::class, 'delete']);
 Route::get('dish/search/{input}', [DishController::class, 'search']);
 
-
 //Order
 Route::post('order/create', [OrderController::class, 'create']);
 Route::get('order/getAll', [OrderController::class, 'getAll']);
 Route::get('order/getItem/{id}', [OrderController::class, 'getItem']);
+Route::get('order/getItems/{user_id}', [OrderController::class, 'getItems']);
 Route::get('order/getTopRestaurant', [OrderController::class, 'getTopRestaurant']);
 Route::put('order/update', [OrderController::class, 'update']);
 //Route::post('getOrderByUserDate/{user_id}/{date}', [OrderController::class, 'getOrderByUserDate']);
@@ -60,12 +60,14 @@ Route::get('order/search/{input}', [OrderController::class, 'search']);
 //OrderItems
 Route::post('orderItems/create', [OrderItemController::class, 'create']);
 Route::get('orderItems/getAll/{order_id}', [OrderItemController::class, 'getAll']);
+Route::get('orderItems/getAllAll', [OrderItemController::class, 'getAllAll']);
 Route::get('orderItems/getItem/{order_id}/{item_id}', [OrderItemController::class, 'getItem']);
 Route::put('orderItems/update', [OrderItemController::class, 'update']);
 //Route::post('getOrderByUserDate/{user_id}/{date}', [OrderController::class, 'getOrderByUserDate']);
 Route::delete('orderItems/delete/{order_id}/{item_id}', [OrderItemController::class, 'delete']);
 Route::delete('orderItems/deleteAll/{order_id}', [OrderItemController::class, 'deleteAll']);
 Route::get('orderItems/search/{input}', [OrderItemController::class, 'search']);
+Route::get('orderItems/getAllByRes/{user_id}', [OrderItemController::class, 'getAllByRes']);
 //Route::get('revenue', [OrderController::class, 'revenue']);
 
 
@@ -73,7 +75,7 @@ Route::get('orderItems/search/{input}', [OrderItemController::class, 'search']);
 Route::post('comment/create', [ReviewController::class, 'create']);
 Route::get('comment/getItemByRate/{rate}', [ReviewController::class, 'getItemByRate']);
 Route::get('comment/getItemByDish/{item_id}', [ReviewController::class, 'getItemByDish']);
-Route::get('comment/getItemByRestaurant/{restaurant_id}', [ReviewController::class, 'getItemByRestaurant']);
+Route::get('comment/getItemByRestaurant/{user_id}', [ReviewController::class, 'getItemByRestaurant']);
 Route::delete('comment/delete/{item_id}/{user_id}', [ReviewController::class, 'delete']);
 Route::delete('comment/deleteAll', [ReviewController::class, 'deleteAll']);
 Route::get('comment/search/{input}', [ReviewController::class, 'search']);
@@ -83,7 +85,7 @@ Route::get('comment/search/{input}', [ReviewController::class, 'search']);
 Route::post('cart/create', [CartController::class, 'create']);
 Route::get('cart/getAll/{user_id}/{restaurant_id}', [CartController::class, 'getAll']);
 Route::put('cart/update', [CartController::class, 'update']);
-Route::delete('cart/delete/{id}', [CartController::class, 'delete']);
+Route::delete('cart/delete/{user_id}/{restaurant_id}/{item_id}', [CartController::class, 'delete']);
 // Route::delete('removeAllCart', [CartController::class, 'removeAllCart']);
 // Route::post('changeAmount', [CartController::class, 'changeAmount']);
 

@@ -11,7 +11,7 @@ class Reviews extends Model
     protected $table = "reviews";
     protected $primaryKey = 'id';
     protected $fillable = [
-        'item_id',
+        'restaurant_id',
         'user_id',
         'rating',
         'comment'
