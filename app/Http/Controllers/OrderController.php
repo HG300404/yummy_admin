@@ -16,23 +16,27 @@ class OrderController extends Controller
 {
     function create(Request $request)
     {
-        if (!$request->user_id || !$request->restaurant_id || !$request->price || !$request->ship || !$request->discount || !$request->total_amount || !$request->payment) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin "]);
-        } else {
-            $item = new Orders;
-            $item->user_id = $request->input("user_id");
-            $item->restaurant_id = $request->input("restaurant_id");
-            $item->price = $request->input("price");
-            $item->ship = $request->input('ship');
-            $item->discount = $request->input("discount");
-            $item->total_amount = $request->input('total_amount');
-            if ($request->payment == 0){
-                $item->payment = "Tiền mặt";
+        try{
+            if (!$request->user_id || !$request->restaurant_id || !$request->price || !$request->ship) {
+                return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin "]);
             } else {
-                $item->payment = "Trực tuyến";
+                $item = new Orders;
+                $item->user_id = $request->input("user_id");
+                $item->restaurant_id = $request->input("restaurant_id");
+                $item->price = $request->input("price");
+                $item->ship = $request->input('ship');
+                $item->discount = $request->input("discount");
+                $item->total_amount = $request->input('total_amount');
+                if ($request->payment == 0){
+                    $item->payment = "Tiền mặt";
+                } else {
+                    $item->payment = "Trực tuyến";
+                }
+                $item->save();            
+                return response()->json($item);
             }
-            $item->save();            
-            return response()->json(["status" => "success", "message" => "Đặt hàng thành công", "order" => $item]);
+        } catch (e){
+          
         }
     }
 

@@ -8,22 +8,23 @@ use App\Models\Dishes;
 use App\Models\Restaurants;
 use App\Models\User;
 use App\Models\Orders;
+use App\Models\Cart;
 use Illuminate\Support\Facades\Schema;
 
 class OrderItemController extends Controller
 {
     function create(Request $request)
     {
-        if (!$request->order_id || !$request->user_id || !$request->restaurant_id || !$request->option) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin "]);
+        if (!$request->order_id || !$request->user_id || !$request->restaurant_id) {
+            return response()->json(["status" => "error", "message" => "Enter full information"]);
         } else {
 
-            $list_item = Cart::where('user_id', $user_id) 
-            ->where('restaurant_id', $restaurant_id)->get();
-
-            foreach ($list_item as $item) {
-                $dish = Dishes::where('id', $item->item_id)->first();
-
+            $list_item = Cart::where('user_id', $request->user_id) 
+            ->where('restaurant_id', $request->restaurant_id)->get();
+          
+            foreach ($list_item as $item1) {
+                $dish = Dishes::where('id', $item1->item_id)->first();
+          
                 if (!$dish) {
                     return response()->json([
                         'status' => 'error',
@@ -34,36 +35,16 @@ class OrderItemController extends Controller
                 $item = new OrdersItems;
                 $item->order_id = $request->input("order_id");
                 $item->item_id  = $dish->id;
-                $item->quantity = $item["quantity"];
+                $item->quantity = $item1->quantity;
                 $item->options = $request->option;
-                $item->save();            
+                $item->save();  
+                
+                $item1->delete();
             }
+            
 
             return response()->json(["status" => "success", "message" => "Đặt hàng thành công"]);
-        }
-
-         // $list_item = Cart::orderBy('created_at', 'desc')->get();
-         $list_item = Cart::where('user_id', $user_id) 
-         ->where('restaurant_id', $restaurant_id) 
-         ->orderBy('created_at', 'desc')->get();
-         $list = [];
-         // $total = 0;
-         // $count = 0;
-         foreach ($list_item as $item) {
-             $dish = Dishes::where('id', $item->item_id)->first();
-                     array_push($list, [
-                         'dish_id' => $dish->id,
-                         'dish_name' => $dish->name,
-                         'dish_price' => $dish->price,
-                         'dish_img' => $dish->img,
-                         'quantity' =>$item->quantity,
-                     ]);
-                     // $total += $dish->price;
-                     // $count += $item->quantity;
-                    }
-                 //    $list['total'] = $total;
-                 //    $list['count'] = $count;       
-         return response()->json($list);      
+        }  
     }
 
     function getAll(string $order_id)
@@ -71,15 +52,27 @@ class OrderItemController extends Controller
         $list_item = OrdersItems::where('order_id', $order_id)->get();
 
         $list = [];
+        $dishes = [];
+        $count = 0;
 
         foreach ($list_item as $item) {
-                array_push($list, [
-                    'order_id' => $item->order_id,
-            'item_id' => $item->item_id,
-            'quantity' => $item->quantity,
-            'options' => $item->options
+            $dish = Dishes::where('id', $item->item_id)->first();
+           
+            if ($dish) {
+                array_push($dishes, [
+                    'img' =>$dish->img,
+                    'dish_name' => $dish->name,
+                    'quantity' => $item->quantity,
                 ]);
+                $count += $item->quantity;
             }
+        }
+        array_push($list, [
+            'order_id' => $order_id,
+            'dishes' => $dishes,
+            'length' => $count,
+            'options' => $list_item[0]->options
+        ]);
 
         return response()->json($list);
 
@@ -131,6 +124,7 @@ class OrderItemController extends Controller
 
     }
     
+
     function getAllByRes(string $user_id)
     {
         $id = Restaurants::where('user_id', $user_id)->first()->id;
@@ -237,11 +231,13 @@ class OrderItemController extends Controller
     }
     function deleteAll(string $order_id)
     {
-        $item = OrdersItems::where('order_id', $order_id);
-        if (!$item) {
+        $item = OrdersItems::where('order_id', $order_id)->get();
+        $order = Orders::where('id',$order_id)->first();
+        if (!$order || !$item) {
             return response()->json(["status" => "error", "message" => "ID không tồn tại"]);
         } else {
-            $user->delete();
+            $order->delete();
+            $item->delete();
             return response()->json(["status" => "success", "message" => "Xoá thành công"]);
         }
     }

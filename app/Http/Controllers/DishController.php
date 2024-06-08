@@ -26,16 +26,16 @@ class DishController extends Controller
         }
     }
 
-    function getAll(Request $request)
+    function getAll(int $user_id)
     {
         try {
-            $list_item = Dishes::orderBy('rate', 'desc')->get();
+            $res = Restaurants::where('user_id',$user_id)->first();
+            $list_item = Dishes::where('restaurant_id',$res->id)->
+            orderBy('rate', 'desc')->get();
             $list = [];
             foreach ($list_item as $item) {
-                $res_name = Restaurants::where('id', $item->restaurant_id)->first();
                         array_push($list, [
                             'id' => $item->id,
-                            'restaurant_name' => $res_name->name,
                             'name' => $item->name,
                             'img' => $item->img,
                             'price' =>$item->price,

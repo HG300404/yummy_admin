@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cart;
 use App\Models\Dishes;
+use App\Models\Restaurants;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -52,6 +54,36 @@ class CartController extends Controller
         } catch (\Exception $e) {
             return response()->json(["status" => "error", "message" => 'Error']);
         }
+    }
+
+    function getAllByUser(int $user_id)
+    {
+        try {
+            $list_item = Cart::select('restaurant_id', DB::raw('SUM(quantity) as total'), DB::raw('GROUP_CONCAT(item_id) as items'))
+                ->where('user_id', $user_id)
+                ->groupBy('restaurant_id')
+                ->get();
+      
+            $list = [];
+            
+            foreach ($list_item as $item){
+                $res = Restaurants::where('id', $item->restaurant_id)->first();
+                $items = explode(',', $item->items);
+                $dishes = Dishes::whereIn('id', $items)->get();
+                
+                array_push($list, [
+                    'img' => $dishes[0]->img,
+                    'id' => $res->id,
+                    'restaurant_name' => $res->name,
+                    'address' => $res->address,
+                    'count' => $item->total,
+                ]);
+            }
+            return response()->json($list);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(["status" => "error", "message" => 'ID không tồn tại']);
+        }
+
     }
 
 

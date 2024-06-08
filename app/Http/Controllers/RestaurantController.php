@@ -63,11 +63,21 @@ class RestaurantController extends Controller
 
     }
 
+    function getItemOwner(string $user_id)
+    {
+        try {
+            $res = Restaurants::where('user_id',$user_id)->first();
+            return response()->json($res);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(["status" => "error", "message" => 'ID not exist']);
+        }
+
+    }
+
     function update(Request $request)
     {
         try {
-            $item = Restaurants::findOrFail($request->id);
-
+            $item = Restaurants::where('id', $request->id)->first();
             if ($request->name) {
                 $item->name = $request->input("name");
             }
