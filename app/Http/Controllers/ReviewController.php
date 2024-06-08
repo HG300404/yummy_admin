@@ -10,6 +10,7 @@ use App\Models\Orders;
 use App\Models\OrdersItems;
 use App\Models\Restaurants;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
@@ -169,5 +170,45 @@ class ReviewController extends Controller
                 }
             }
         }
+    }
+
+    //Admin
+    function totalRating(Request $request)
+    {
+        $list = DB::table('reviews')
+        ->select('rating', DB::raw('count(rating) AS count'))
+        ->groupBy('rating')
+        ->get();
+
+    return response()->json($list);
+    }
+
+
+    function countRegister(Request $request)
+    {
+        $userCount = User::count();
+        $restaurantCount = Restaurants::count();
+
+        return response()->json([
+            'user_count' => $userCount,
+            'restaurant_count' => $restaurantCount
+        ]);
+    }
+
+    //Owner
+    function totalRatingByOwner(int $user_id)
+    {
+        $res = Restaurants::where('user_id',$user_id)->first();
+        if (!$res) {
+            return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
+        }
+
+        $list = DB::table('reviews')
+        ->where('restaurant_id', $res->id)
+        ->select('rating', DB::raw('count(rating) AS count'))
+        ->groupBy('rating')
+        ->get();
+
+    return response()->json($list);
     }
 }

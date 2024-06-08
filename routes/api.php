@@ -102,4 +102,18 @@ Route::delete('cart/delete/{user_id}/{restaurant_id}/{item_id}', [CartController
 // Route::delete('removeAllCart', [CartController::class, 'removeAllCart']);
 // Route::post('changeAmount', [CartController::class, 'changeAmount']);
 
+//Chart_Admin
+//Doanh thu theo tháng
+Route::get('order/revenueByMonth', [OrderController::class, 'calculateTotalAmountByMonth']);
+//Tổng đơn hàng theo từng ngày
+Route::get('order/totalOrderByWeekday', [OrderController::class, 'calculateTotalOrderByWeekday']);
+//Tổng từng rate
+Route::get('comment/totalRating', [ReviewController::class, 'totalRating']);
+//Số lượng user,res
+Route::get('comment/countRegister', [ReviewController::class, 'countRegister']);
 
+
+//Chart_Owner
+Route::get('order/revenueByMonthByOwer/{user_id}', [OrderController::class, 'totalAmountByMonth']);
+Route::get('order/totalOrderByWeekdayByOwner/{user_id}', [OrderController::class, 'totalOrderByWeekday']);
+Route::get('comment/totalRatingByOwner/{user_id}', [ReviewController::class, 'totalRatingByOwner']);
