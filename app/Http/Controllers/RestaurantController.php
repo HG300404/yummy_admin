@@ -7,6 +7,7 @@ use App\Models\Dishes;
 use App\Models\Reviews;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RestaurantController extends Controller
 {
@@ -37,6 +38,18 @@ class RestaurantController extends Controller
         $list = Restaurants::query();
         $list = $list->get();
         return response()->json($list);
+
+    }
+
+    function getAllHome()
+    {
+        $topRestaurants = Restaurants::join('orders', 'restaurants.id', '=', 'orders.restaurant_id')
+        ->select('restaurants.id', 'restaurants.name', 'restaurants.address', 'restaurants.opening_hours', DB::raw('COUNT(orders.id) as order_count'))
+        ->groupBy('restaurants.id', 'restaurants.name', 'restaurants.address', 'restaurants.opening_hours')
+        ->orderByDesc('order_count')
+        ->get();
+
+        return $topRestaurants;
 
     }
 

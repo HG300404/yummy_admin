@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 use App\Models\Restaurants;
 use Illuminate\Http\Request;
 use App\Models\Dishes;
+use App\Models\OrdersItems;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\DB;
 class DishController extends Controller
 {
     function create(Request $request)
@@ -32,6 +33,9 @@ class DishController extends Controller
             $res = Restaurants::where('user_id',$user_id)->first();
             $list_item = Dishes::where('restaurant_id',$res->id)->
             orderBy('rate', 'desc')->get();
+            // if (!$$list_item) {
+            //     return ["status" => "success", 'message' => 'Không có dữ liệu'];
+            // }
             $list = [];
             foreach ($list_item as $item) {
                         array_push($list, [
@@ -53,6 +57,23 @@ class DishController extends Controller
         }
 
     }
+
+
+
+    function getAllHome()
+    {
+        $topDishes = Dishes::join('orderItems', 'dishes.id', '=', 'orderItems.item_id')
+    ->join('orders', 'orderItems.order_id', '=', 'orders.id')
+    ->join('restaurants', 'dishes.restaurant_id', '=', 'restaurants.id')
+    ->select('dishes.img', 'dishes.name', 'restaurants.name AS restaurant_name', 'dishes.type', 'dishes.rate', 'dishes.price')
+    ->groupBy('dishes.id', 'dishes.name', 'restaurants.name', 'dishes.type', 'dishes.rate', 'dishes.price', 'dishes.img')
+    ->orderByRaw('COUNT(orderItems.item_id) DESC')
+    ->get();
+
+// Trả về danh sách kết quả
+return $topDishes;
+    }
+
 
     function getRecent(Request $request)
     {
@@ -134,7 +155,7 @@ class DishController extends Controller
             }
             $item->update();
 
-            return response()->json(['status' => "SUCCESS", "data" => $item]);
+            return response()->json(['status' => "success", "data" => $item]);
 
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return response()->json(['status' => "error", 'message' => 'ID không tồn tại']);
@@ -152,7 +173,7 @@ class DishController extends Controller
         }
     }
 
-    function search(string $input)
+    function search(string $input, int $res_id)
     {
         if (empty($input)) {
             return ["status" => "error", 'message' => 'Vui lòng nhập từ khoá tìm kiếm'];
@@ -162,7 +183,7 @@ class DishController extends Controller
                 foreach ($columns as $column) {
                     $query->orWhere($column, 'like', '%' . $input . '%');
                 }
-            })->get();
+            })->where('restaurant_id', $res_id) ->get();
         
             if ($results->isEmpty()) {
                 return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];

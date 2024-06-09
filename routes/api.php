@@ -34,15 +34,18 @@ Route::put('restaurant/update', [RestaurantController::class, 'update']);
 Route::delete('restaurant/delete/{id}', [RestaurantController::class, 'delete']);
 Route::get('restaurant/search/{input}', [RestaurantController::class, 'search']);
 Route::get('restaurant/searchColumn/{label}/{input}', [RestaurantController::class, 'searchColumn']);
+Route::get('restaurant/getAllHome', [RestaurantController::class, 'getAllHome']);
+
 
 //Dish
 Route::post('dish/create', [DishController::class, 'create']);
+Route::get('dish/getAllHome', [DishController::class, 'getAllHome']);
 Route::get('dish/getAll/{user_id}', [DishController::class, 'getAll']);
 Route::get('dish/getRecent', [DishController::class, 'getRecent']);
 Route::get('dish/getItem/{id}', [DishController::class, 'getItem']);
 Route::put('dish/update', [DishController::class, 'update']);
 Route::delete('dish/delete/{id}', [DishController::class, 'delete']);
-Route::get('dish/search/{input}', [DishController::class, 'search']);
+Route::get('dish/search/{input}/{res_id}', [DishController::class, 'search']);
 
 //Order
 Route::post('order/create', [OrderController::class, 'create']);
@@ -51,7 +54,6 @@ Route::get('order/getAll', [OrderController::class, 'getAll']);
 Route::get('order/getItem/{id}', [OrderController::class, 'getItem']);
 //Lấy theo user_id của khách hàng
 Route::get('order/getItems/{user_id}', [OrderController::class, 'getItems']);
-Route::get('order/getTopRestaurant', [OrderController::class, 'getTopRestaurant']);
 Route::put('order/update', [OrderController::class, 'update']);
 //Route::post('getOrderByUserDate/{user_id}/{date}', [OrderController::class, 'getOrderByUserDate']);
 Route::delete('order/delete/{id}', [OrderController::class, 'delete']);
