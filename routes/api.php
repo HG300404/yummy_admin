@@ -119,3 +119,6 @@ Route::get('comment/countRegister', [ReviewController::class, 'countRegister']);
 Route::get('order/revenueByMonthByOwer/{user_id}', [OrderController::class, 'totalAmountByMonth']);
 Route::get('order/totalOrderByWeekdayByOwner/{user_id}', [OrderController::class, 'totalOrderByWeekday']);
 Route::get('comment/totalRatingByOwner/{user_id}', [ReviewController::class, 'totalRatingByOwner']);
+// Forget PassWord
+Route::post('user/forgot-password', [UserController::class, 'postforgot']);
+Route::get('user/forgot-password', [UserController::class, 'forgot']);

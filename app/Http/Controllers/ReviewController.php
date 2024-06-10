@@ -176,8 +176,8 @@ class ReviewController extends Controller
     function totalRating(Request $request)
     {
         $list = DB::table('reviews')
-        ->select('rating', DB::raw('count(rating) AS count'))
-        ->groupBy('rating')
+        ->select('rating AS name', DB::raw('count(rating) AS count'))
+        ->groupBy('name')
         ->get();
 
     return response()->json($list);
@@ -189,10 +189,11 @@ class ReviewController extends Controller
         $userCount = User::count();
         $restaurantCount = Restaurants::count();
 
-        return response()->json([
-            'user_count' => $userCount,
-            'restaurant_count' => $restaurantCount
-        ]);
+        $response = [
+            ['name' => 'Khách đăng kí', 'Se' => $userCount],
+            ['name' => 'Chủ đăng kí', 'Se' => $restaurantCount],
+        ];
+        return response()->json($response);
     }
 
     //Owner
@@ -205,10 +206,11 @@ class ReviewController extends Controller
 
         $list = DB::table('reviews')
         ->where('restaurant_id', $res->id)
-        ->select('rating', DB::raw('count(rating) AS count'))
-        ->groupBy('rating')
+        ->select('rating AS name' , DB::raw('count(name) AS count'))
+        ->groupBy('name')
         ->get();
 
     return response()->json($list);
     }
+    //t nhớ rồi, mi đang dùng db cũ
 }
