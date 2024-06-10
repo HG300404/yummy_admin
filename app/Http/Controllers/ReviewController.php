@@ -14,27 +14,31 @@ use Illuminate\Support\Facades\DB;
 
 class ReviewController extends Controller
 {
-    function create(Request $request)
+    public function create(Request $request)
     {
-        if (!$request->order_id || !$request->user_id || !$request->comment || !$request->rating ) {
-            return response()->json(["status" => "error", "message" => "Vui lòng nhập đủ thông tin "]);
-        } else {
-            $order = OrdersItems::where('order_id', $request->order_id)->get();
-            foreach ($order as $item){
-                $dish = Dishes::where('id', $item->item_id)->firstOrFail();
-                $dish->rate += $request->rating;
-                
-
+        try {
+            if (!$request->restaurant_id || !$request->user_id || !$request->comment || !$request->rating || !$request->order_id) {
+                return response()->json(["status" => "error", "message" => "Enter full infor "]);
+            } else {
+                $order = OrdersItems::where('order_id', $request->order_id)->get();
+                foreach ($order as $item){
+                    $dish = Dishes::where('id', $item->item_id)->firstOrFail();
+                    $dish->rate += $request->rating;    
+                }
+    
                 $review = new Reviews;
-                $review->item_id = $item->item_id;
+                $review->restaurant_id = $request->restaurant_id;
                 $review->user_id  = $request->user_id;
                 $review->rating = $request->rating;
                 $review->comment = $request->comment;
-    
-                $review->save();       
+                $review->order_id = $request->order_id;
+                    
+                $review->save();   
+                
+                return response()->json(["status" => "success", "message" => "Save success"]);
             }
-            
-            return response()->json(["status" => "success", "message" => "Lưu đánh giá thành công"]);
+        } catch (\Exception $e) {
+            return response()->json(["status" => "error", "message" => $e->getMessage()]);
         }
     }
     
@@ -122,6 +126,23 @@ class ReviewController extends Controller
         }
 
     }
+
+    function getItemByOrder(string $order_id)
+    {
+        try {
+            $review = Reviews::where('order_id', $order_id)->first();
+
+            // if (!$review) {
+            //     return response()->json(["status" => "success", "message" => "Không tìm thấy"]);
+            // }
+            return response()->json($review);
+           
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json(["status" => "error", "message" => 'ID không tồn tại']);
+        }
+
+    }
+
 
     function delete(string $item_id, string $user_id)
     {

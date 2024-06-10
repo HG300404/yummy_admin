@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 09, 2024 at 07:51 AM
+-- Generation Time: Jun 10, 2024 at 05:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,14 +67,11 @@ CREATE TABLE `carts` (
 
 INSERT INTO `carts` (`id`, `user_id`, `item_id`, `quantity`, `created_at`, `updated_at`, `restaurant_id`) VALUES
 (3, 1, 5, 2, '2024-05-30 13:01:08', '2024-05-30 13:01:08', 1),
-(7, 5, 1, 1, '2024-06-08 01:47:31', '2024-06-08 01:47:31', 1),
-(8, 5, 3, 2, '2024-06-08 01:49:15', '2024-06-08 01:49:27', 1),
-(9, 5, 2, 1, '2024-06-08 01:49:35', '2024-06-08 01:49:35', 1),
-(13, 13, 1, 1, '2024-06-08 12:25:14', '2024-06-08 12:25:14', 1),
-(14, 13, 2, 1, '2024-06-08 12:25:24', '2024-06-08 12:25:24', 1),
-(15, 13, 7, 1, '2024-06-08 12:25:35', '2024-06-08 12:25:35', 1),
-(16, 13, 6, 1, '2024-06-08 12:25:39', '2024-06-08 12:25:39', 1),
-(21, 2, 2, 1, '2024-06-08 12:45:47', '2024-06-08 12:45:47', 1);
+(21, 2, 2, 1, '2024-06-08 12:45:47', '2024-06-08 12:45:47', 1),
+(27, 13, 2, 1, '2024-06-09 10:45:48', '2024-06-09 10:45:48', 1),
+(28, 5, 1, 1, '2024-06-09 10:46:24', '2024-06-09 10:46:24', 1),
+(29, 5, 4, 1, '2024-06-09 10:46:37', '2024-06-09 10:46:37', 1),
+(30, 5, 4, 1, '2024-06-09 10:46:39', '2024-06-09 10:46:39', 1);
 
 -- --------------------------------------------------------
 
@@ -224,7 +221,16 @@ INSERT INTO `orderitems` (`order_id`, `item_id`, `quantity`, `options`, `created
 (16, 2, 1, 'khong', '2024-06-08 12:46:05', '2024-06-08 12:46:05'),
 (16, 5, 1, 'khong', '2024-06-08 12:46:05', '2024-06-08 12:46:05'),
 (17, 2, 1, 'Them da', '2024-06-08 20:41:26', '2024-06-08 20:41:26'),
-(17, 3, 1, 'Them da', '2024-06-08 20:41:26', '2024-06-08 20:41:26');
+(17, 3, 1, 'Them da', '2024-06-08 20:41:26', '2024-06-08 20:41:26'),
+(18, 2, 1, NULL, '2024-06-09 10:14:13', '2024-06-09 10:14:13'),
+(18, 5, 1, NULL, '2024-06-09 10:14:13', '2024-06-09 10:14:13'),
+(19, 1, 1, NULL, '2024-06-09 10:24:53', '2024-06-09 10:24:53'),
+(19, 6, 1, NULL, '2024-06-09 10:24:53', '2024-06-09 10:24:53'),
+(19, 7, 1, NULL, '2024-06-09 10:24:53', '2024-06-09 10:24:53'),
+(20, 2, 1, NULL, '2024-06-09 10:34:47', '2024-06-09 10:34:47'),
+(21, 1, 1, NULL, '2024-06-09 10:47:10', '2024-06-09 10:47:10'),
+(21, 2, 1, NULL, '2024-06-09 10:47:10', '2024-06-09 10:47:10'),
+(21, 3, 2, NULL, '2024-06-09 10:47:10', '2024-06-09 10:47:10');
 
 -- --------------------------------------------------------
 
@@ -257,7 +263,11 @@ INSERT INTO `orders` (`id`, `user_id`, `restaurant_id`, `price`, `ship`, `discou
 (14, 2, 1, 20, 5, 0, '25', '2024-06-08 12:35:14', '2024-06-08 12:35:14', 'Tiền mặt'),
 (15, 2, 1, 20, 5, 0, '25', '2024-06-08 12:38:54', '2024-06-08 12:38:54', 'Tiền mặt'),
 (16, 2, 1, 45, 5, 0, '50', '2024-06-08 12:46:05', '2024-06-08 12:46:05', 'Tiền mặt'),
-(17, 4, 1, 35, 5, 0, '40', '2024-06-08 20:41:26', '2024-06-08 20:41:26', 'Tiền mặt');
+(17, 4, 1, 35, 5, 0, '40', '2024-06-08 20:41:26', '2024-06-08 20:41:26', 'Tiền mặt'),
+(18, 4, 1, 45, 5, 0, '50', '2024-06-09 10:14:12', '2024-06-09 10:14:12', 'Trực tuyến'),
+(19, 13, 1, 45, 5, 0, '50', '2024-06-09 10:24:53', '2024-06-09 10:24:53', 'Trực tuyến'),
+(20, 13, 1, 15, 5, 0, '20', '2024-06-09 10:34:46', '2024-06-09 10:34:46', 'Trực tuyến'),
+(21, 5, 1, 105, 5, 0, '110', '2024-06-09 10:47:10', '2024-06-09 10:47:10', 'Trực tuyến');
 
 -- --------------------------------------------------------
 
@@ -301,7 +311,9 @@ CREATE TABLE `restaurants` (
 
 INSERT INTO `restaurants` (`id`, `name`, `address`, `phone`, `opening_hours`, `created_at`, `updated_at`, `user_id`) VALUES
 (1, 'Bún đậu 1996', '358 Đ. Trần Đại Nghĩa, Hoà Hải, Ngũ Hành Sơn, Đà Nẵng, Việt Nam', '0905421172', '17:00 - 22:00', '2024-05-17 02:18:48', '2024-06-07 08:00:02', 6),
-(2, 'Vua Ốc', '241 Đường Trần Đại Nghĩa, Hoà Hải, Ngũ Hành Sơn, Đà Nẵng, Việt Nam', '0966379378', '10:00 - 22:00', '2024-06-06 02:19:15', '2024-06-06 02:19:15', 12);
+(2, 'Vua Ốc', '241 Đường Trần Đại Nghĩa, Hoà Hải, Ngũ Hành Sơn, Đà Nẵng, Việt Nam', '0966379378', '10:00 - 22:00', '2024-06-06 02:19:15', '2024-06-06 02:19:15', 12),
+(3, 'Bánh Mỳ Ngon', '241 Đường Trần Đại Nghĩa, Hoà Hải, Ngũ Hành Sơn, Đà Nẵng, Việt Nam', '0966379378', '00:00 - 00:00', '2024-06-09 00:17:19', '2024-06-09 00:17:19', 14),
+(4, '2 Cậu', '241 Đường Trần Đại Nghĩa, Hoà Hải, Ngũ Hành Sơn, Đà Nẵng, Việt Nam', '0966379378', '00:00 - 00:00', '2024-06-09 00:31:07', '2024-06-09 00:31:07', 15);
 
 -- --------------------------------------------------------
 
@@ -316,15 +328,17 @@ CREATE TABLE `reviews` (
   `comment` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `id` bigint(20) NOT NULL
+  `id` bigint(20) NOT NULL,
+  `order_id` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `reviews`
 --
 
-INSERT INTO `reviews` (`restaurant_id`, `user_id`, `rating`, `comment`, `created_at`, `updated_at`, `id`) VALUES
-(1, 1, 5, 'Bún đậu ngon, sẽ ghé lại', '2024-05-18 09:47:51', '2024-05-18 09:47:51', 1);
+INSERT INTO `reviews` (`restaurant_id`, `user_id`, `rating`, `comment`, `created_at`, `updated_at`, `id`, `order_id`) VALUES
+(1, 5, 5, 'Bún đậu ngon, sẽ ghé lại', '2024-05-18 09:47:51', '2024-05-18 09:47:51', 1, 4),
+(1, 5, 3, 'Cung duoc', '2024-06-09 14:43:35', '2024-06-09 14:43:35', 3, 11);
 
 -- --------------------------------------------------------
 
@@ -355,11 +369,13 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `phone`, `address`, `role`, `image`, `level`, `coin`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Huong', '$2y$12$WNbf9KtPxKL9DPlM9XktbOT3/zWZfebAMNtftuGzShBgs9GuWLwkW', 'nglienhg000@gmail.com', '0888518142', 'Da Nang', 'admin', '', 1, 0, NULL, '2024-05-15 21:04:05', '2024-05-17 00:50:57'),
 (2, 'An', '$2y$12$4RzeJwInDhYJ9oARDMyv5e.GKLqPPyx.ivS1a7u.MRkZ5vT6YNfqK', 'an@gmail.com', '0456213789', '470 Trần Đại Nghĩa, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng', 'admin', '', 1, 0, NULL, '2024-05-15 21:05:52', '2024-05-22 12:35:43'),
-(4, 'Huong123', '$2y$12$C/UlMr8YdNX18PU//jR1pO9yJEYBIxoleTvWypmwONGtYQAZIso4.', 'huong@gmail.com', '0888518142', 'Quảng Trị', 'admin', '', 1, 0, NULL, '2024-05-20 08:17:28', '2024-05-22 12:40:53'),
-(5, 'Dung', '$2y$12$HQ0IafRYqgIHUqHRFhrEie5eeAdTIyD97mOlulS4abuk41DwQXwyq', 'dung@gmail.com', '0456987123', '470 Trần Đại Nghĩa, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng', 'user', '', 1, 0, NULL, '2024-05-20 09:36:16', '2024-05-22 12:41:58'),
+(4, 'Huong123', '$2y$12$C/UlMr8YdNX18PU//jR1pO9yJEYBIxoleTvWypmwONGtYQAZIso4.', 'huong@gmail.com', '0888518142', '470 Trần Đại Nghĩa, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng', 'admin', '', 1, 0, NULL, '2024-05-20 08:17:28', '2024-05-22 12:40:53'),
+(5, 'Dung', '$2y$12$2vpJ6Y4mNMtSXwM1nMY2LuwM5iiR6.pW1Qqxo7pYkIz/lYe19K2fy', 'dung@gmail.com', '0456987124', '470 Trần Đại Nghĩa, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng', 'user', '', 1, 0, NULL, '2024-05-20 09:36:16', '2024-06-09 19:02:54'),
 (6, 'Nguyễn Bình', '$2y$12$K1j5f9ctxuF/VmqKT5L7Auaz93rgE5AtLXHiTn0Fpc4oI3E10tRf.', 'binh@gmail.com', '0888518142', 'Huế', 'restaurant', '', 1, 0, NULL, '2024-05-22 09:20:52', '2024-05-23 05:51:26'),
 (12, 'Minh', '$2y$12$3O/T1BXVGrPmswZadidNAui9iryZaFbEPHqwsEtq6gyuP872mEkby', 'minh@gmail.com', '0457891235', NULL, 'restaurant', '', 1, 0, NULL, '2024-06-06 01:43:43', '2024-06-06 01:43:43'),
-(13, 'Linh', '$2y$12$OCG4Mj5IetV4Vt0t7AFRfuhxCS41sQxTGInb31NQJtqZrizf3Sh.S', 'linh@gmail.com', '0456321456', '470 Trần Đại Nghĩa, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng', 'user', '', 1, 0, NULL, '2024-06-08 10:22:33', '2024-06-08 10:22:33');
+(13, 'Linh', '$2y$12$OCG4Mj5IetV4Vt0t7AFRfuhxCS41sQxTGInb31NQJtqZrizf3Sh.S', 'linh@gmail.com', '0456321456', '470 Trần Đại Nghĩa, Hoà Quý, Ngũ Hành Sơn, Đà Nẵng', 'user', '', 1, 0, NULL, '2024-06-08 10:22:33', '2024-06-08 10:22:33'),
+(14, 'Quang', '$2y$12$LDP4dKXEbwnDV.aX4zs3beFrIwylXxxxb0yLbuYw/pBKKWOP2hn6a', 'quang@gmail.com', '0856321456', NULL, 'restaurant', '', 1, 0, NULL, '2024-06-09 00:16:14', '2024-06-09 00:16:14'),
+(15, 'Nam', '$2y$12$SnC5o0lSirZdwU7Ch0R58OfL0Bb2H9po4FuE3M6Q17SAGJxF3KAhO', 'nam@gmail.com', '0985621436', NULL, 'restaurant', '', 1, 0, NULL, '2024-06-09 00:30:31', '2024-06-09 00:30:31');
 
 --
 -- Indexes for dumped tables
@@ -470,7 +486,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `dishes`
@@ -500,7 +516,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -512,19 +528,19 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `restaurants`
 --
 ALTER TABLE `restaurants`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Constraints for dumped tables

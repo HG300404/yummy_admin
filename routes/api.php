@@ -46,6 +46,7 @@ Route::get('dish/getItem/{id}', [DishController::class, 'getItem']);
 Route::put('dish/update', [DishController::class, 'update']);
 Route::delete('dish/delete/{id}', [DishController::class, 'delete']);
 Route::get('dish/search/{input}/{res_id}', [DishController::class, 'search']);
+Route::get('dish/searchDish/{input}', [DishController::class, 'searchDish']);
 
 //Order
 Route::post('order/create', [OrderController::class, 'create']);
@@ -88,6 +89,7 @@ Route::post('comment/create', [ReviewController::class, 'create']);
 Route::get('comment/getItemByRate/{rate}', [ReviewController::class, 'getItemByRate']);
 Route::get('comment/getItemByDish/{item_id}', [ReviewController::class, 'getItemByDish']);
 Route::get('comment/getItemByRestaurant/{user_id}', [ReviewController::class, 'getItemByRestaurant']);
+Route::get('comment/getItemByOrder/{order_id}', [ReviewController::class, 'getItemByOrder']);
 Route::delete('comment/delete/{item_id}/{user_id}', [ReviewController::class, 'delete']);
 Route::delete('comment/deleteAll', [ReviewController::class, 'deleteAll']);
 Route::get('comment/search/{input}', [ReviewController::class, 'search']);
@@ -98,7 +100,7 @@ Route::post('cart/create', [CartController::class, 'create']);
 //lấy theo người và quán
 Route::get('cart/getAll/{user_id}/{restaurant_id}', [CartController::class, 'getAll']);
 //Lấy theo người
-Route::get('cart/getAll/{user_id}', [CartController::class, 'getAllByUser']);
+Route::get('cart/getAllByUser/{user_id}', [CartController::class, 'getAllByUser']);
 Route::put('cart/update', [CartController::class, 'update']);
 Route::delete('cart/delete/{user_id}/{restaurant_id}/{item_id}', [CartController::class, 'delete']);
 // Route::delete('removeAllCart', [CartController::class, 'removeAllCart']);

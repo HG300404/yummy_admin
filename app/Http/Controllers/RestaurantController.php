@@ -65,8 +65,11 @@ class RestaurantController extends Controller
             $totalRate += $review->sum('rating');
             $reviewCount += $review->count();
                
-            
-            $res->setAttribute('total_rate', $totalRate / $reviewCount);
+            if($reviewCount == 0){
+                $res->setAttribute('total_rate', 0);
+            } else {
+                $res->setAttribute('total_rate', $totalRate / $reviewCount);
+            }
             $res->setAttribute('review_count', $reviewCount);
 
             return response()->json($res);
