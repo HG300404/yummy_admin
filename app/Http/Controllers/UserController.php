@@ -10,42 +10,47 @@ class UserController extends Controller
 {
     function register(Request $request)
     {
-        if (!$request->email || !$request->password) {
-            return response()->json(["status" => "error", "message" => "Enter missing information"]);
-        } else {
-            $user = new User;
-            $user->name = $request->input("name");
-            $user->phone = $request->input("phone");
-            $user->address = $request->input("address");
-            $check = User::where('email', $request->email)->first();
-            if ($check) {
-                return ["status" => "error", "message" => "Email exist"];
-            } else {
-                $user->email = $request->input("email");
-            }
-            $user->password = Hash::make($request->input("password"));
-            $user->role = $request->input('role');
-            $user->image = "";
-            $user->level = 1;
-            $user->coin = 0;
-            $user->save();            
-            return response()->json(["status" => "success", "message" => "Đăng ký thành công", "user" => $user]);
+        if (!$request->email) {
+            return response()->json(["status" => "error", "message" => "Email is required"]);
         }
+
+        $check = User::where('email', $request->email)->first();
+        if ($check) {
+            return response()->json(["status" => "error", "message" => "Email already exists"]);
+        }
+
+        $user = new User;
+        $user->name = $request->input("name");
+        $user->phone = $request->input("phone") ?? '';
+        $user->address = $request->input("address") ?? '';
+        $user->email = $request->input("email");
+        $user->password = Hash::make($request->input("password") ?? '');
+        $user->role = $request->input('role') ?? 'user';
+        $user->image = $request->input('image') ?? '';
+        $user->level = 1;
+        $user->coin = 0;
+        $user->save();
+
+        return response()->json(["status" => "success", "message" => "Đăng ký thành công", "user" => $user]);
     }
+    
     function login(Request $request)
     {
         if (!$request->email || !$request->password) {
             return response()->json(["status" => "error", "message" => "Enter missing information"]);
-        } else {
-            $user = User::where('email', $request->email)->first();
-            if (!$user) {
-                return response()->json(["status" => "error", "message" => "Email not exist"]);
-            } else if (!Hash::check($request->password, $user->password)) {
-                return response()->json(["status" => "error", "message" => "Wrong password"]);
-            }
-            return response()->json(["status" => "success", "user" => $user]);
+        } 
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            return response()->json(["status" => "error", "message" => "Email does not exist"]);
         }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(["status" => "error", "message" => "Wrong password"]);
+        }
+
+        return response()->json(["status" => "success", "user" => $user]);
     }
+
 
     function getAll(Request $request)
     {
@@ -89,25 +94,6 @@ class UserController extends Controller
             if ($request->role) {
                 $user->role = $request->input("role");
             }
-            
-            // if ($request->hasFile("image")) {
-            //     $image = $request->file("image");
-            //     return response()->json(['status'=>"success","message" =>"Update successful","data"=>$image]);
-
-            //     // Lưu file ảnh vào thư mục lưu trữ
-            //     $path = $image->store("public/uploads");
-
-            //     // Lấy tên file để lưu vào cơ sở dữ liệu
-            //     $filename = Str::random(32).".".$image->getClientOriginalExtension();
-
-            //     // Xóa file ảnh cũ
-            //     if ($user->image_path){
-            //         Storage::delete($user->image_path);
-            //     }
-            //     // Lưu đường dẫn file ảnh vào cơ sở dữ liệu
-            //     $user->image_path = $path;
-            //     $user->image_filename = $filename;
-            // }
 
             if ($request->level) {
                 $user->level = $request->input("level");
