@@ -162,71 +162,70 @@ class OrderController extends Controller
         }
     }
 
-    //Admin
-    function calculateTotalAmountByMonth(Request $request)
-    {
-        $currentYear = Carbon::now()->year;
-        $list = DB::table('orders')
-        ->whereYear('created_at', $currentYear)
-        ->select(DB::raw('MONTH(created_at) AS name1, SUM(total_amount) AS total'))
-        ->groupBy('name1')
-        ->get();
+   //Admin
+   function calculateTotalAmountByMonth(Request $request)
+   {
+       $currentYear = Carbon::now()->year;
+       $list = DB::table('orders')
+       ->whereYear('created_at', $currentYear)
+       ->select(DB::raw('MONTH(created_at) AS name1, SUM(total_amount) AS total'))
+       ->groupBy('name1')
+       ->get();
 
-        return response()->json($list);
-    }
+       return response()->json($list);
+   }
 
-    function calculateTotalOrderByWeekday()
-    {
-        $currentWeekStart = Carbon::now()->startOfWeek();
-        $currentWeekEnd = Carbon::now()->endOfWeek();
+   function calculateTotalOrderByWeekday()
+   {
+       $currentWeekStart = Carbon::now()->startOfWeek();
+       $currentWeekEnd = Carbon::now()->endOfWeek();
 
-        $totals = DB::table('orders')
-        ->whereBetween('created_at', [$currentWeekStart, $currentWeekEnd])
-        ->select(DB::raw('DAYOFWEEK(created_at) AS name, SUM(total_amount) AS total'))
-        ->groupBy('name')
-        ->get();
+       $totals = DB::table('orders')
+       ->whereBetween('created_at', [$currentWeekStart, $currentWeekEnd])
+       ->select(DB::raw('DAYOFWEEK(created_at) AS name, SUM(total_amount) AS total'))
+       ->groupBy('name')
+       ->get();
 
-    return response()->json($totals);
-    }
+   return response()->json($totals);
+   }
 
-    //Owner
-    function totalAmountByMonth(int $user_id)
-    {
+   //Owner
+   function totalAmountByMonth(int $user_id)
+   {
 
-        $res = Restaurants::where('user_id',$user_id)->first();
-        if (!$res) {
-            return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
-        }
+       $res = Restaurants::where('user_id',$user_id)->first();
+       if (!$res) {
+           return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
+       }
 
-        $currentYear = Carbon::now()->year;
-        $list = DB::table('orders')
-        ->where('restaurant_id', $res->id)
-        ->whereYear('created_at', $currentYear)
-        ->select(DB::raw('MONTH(created_at) AS name2, SUM(total_amount) AS total'))
-        ->groupBy('name2')
-        ->get();
+       $currentYear = Carbon::now()->year;
+       $list = DB::table('orders')
+       ->where('restaurant_id', $res->id)
+       ->whereYear('created_at', $currentYear)
+       ->select(DB::raw('MONTH(created_at) AS name2, SUM(total_amount) AS total'))
+       ->groupBy('name2')
+       ->get();
 
-        return response()->json($list);
-    }
+       return response()->json($list);
+   }
 
-    function totalOrderByWeekday(int $user_id)
-    {
-        $res = Restaurants::where('user_id', $user_id)->first();
-        if (!$res) {
-            return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
-        }
-        
-        $currentWeekStart = Carbon::now()->startOfWeek();
-        $currentWeekEnd = Carbon::now()->endOfWeek();
-    
-        $totals = DB::table('orders')
-            ->where('restaurant_id', $res->id)
-            ->whereBetween('created_at', [$currentWeekStart, $currentWeekEnd])
-            ->select(DB::raw('DAYOFWEEK(created_at) AS name'), DB::raw('SUM(total_amount) AS total'))
-            ->groupBy('name')
-            ->get();
-    
-        return response()->json($totals);
-    }
-    
+   function totalOrderByWeekday(int $user_id)
+   {
+       $res = Restaurants::where('user_id',$user_id)->first();
+       if (!$res) {
+           return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
+       }
+
+       $currentWeekStart = Carbon::now()->startOfWeek();
+       $currentWeekEnd = Carbon::now()->endOfWeek();
+
+       $totals = DB::table('orders')
+       ->where('restaurant_id', $res->id)
+       ->whereBetween('created_at', [$currentWeekStart, $currentWeekEnd])
+       ->select(DB::raw('DAYOFWEEK(created_at) AS name, SUM(total_amount) AS total'))
+       ->groupBy('name')
+       ->get();
+
+       return response()->json($totals);
+   }
 }

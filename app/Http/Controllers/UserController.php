@@ -27,8 +27,8 @@ class UserController extends Controller
         $user->password = Hash::make($request->input("password") ?? '');
         $user->role = $request->input('role') ?? 'user';
         $user->image = $request->input('image') ?? '';
-        $user->level = $request->input('level') ?? 1;
-        $user->coin = $request->input('coin') ?? 0;
+$user->level = 1;
+        $user->coin = 0;
         $user->save();
 
         return response()->json(["status" => "success", "message" => "Đăng ký thành công", "user" => $user]);
@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         if (!$request->email) {
             return response()->json(["status" => "error", "message" => "Enter missing information"]);
-        }
+ }
     
         $user = User::where('email', $request->email)->first();
         if (!$user) {
@@ -57,6 +57,7 @@ class UserController extends Controller
         return response()->json(["status" => "success", "user" => $user]);
     }
     
+
 
     function getAll(Request $request)
     {
@@ -100,25 +101,6 @@ class UserController extends Controller
             if ($request->role) {
                 $user->role = $request->input("role");
             }
-            
-            // if ($request->hasFile("image")) {
-            //     $image = $request->file("image");
-            //     return response()->json(['status'=>"success","message" =>"Update successful","data"=>$image]);
-
-            //     // Lưu file ảnh vào thư mục lưu trữ
-            //     $path = $image->store("public/uploads");
-
-            //     // Lấy tên file để lưu vào cơ sở dữ liệu
-            //     $filename = Str::random(32).".".$image->getClientOriginalExtension();
-
-            //     // Xóa file ảnh cũ
-            //     if ($user->image_path){
-            //         Storage::delete($user->image_path);
-            //     }
-            //     // Lưu đường dẫn file ảnh vào cơ sở dữ liệu
-            //     $user->image_path = $path;
-            //     $user->image_filename = $filename;
-            // }
 
             if ($request->level) {
                 $user->level = $request->input("level");

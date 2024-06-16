@@ -65,26 +65,28 @@ class DishController extends Controller
         $topDishes = Dishes::join('orderItems', 'dishes.id', '=', 'orderItems.item_id')
     ->join('orders', 'orderItems.order_id', '=', 'orders.id')
     ->join('restaurants', 'dishes.restaurant_id', '=', 'restaurants.id')
-    ->select('dishes.img', 'dishes.name', 'restaurants.name AS restaurant_name', 'dishes.type', 'dishes.rate', 'dishes.price')
-    ->groupBy('dishes.id', 'dishes.name', 'restaurants.name', 'dishes.type', 'dishes.rate', 'dishes.price', 'dishes.img')
+    ->select('dishes.img', 'dishes.name', 'restaurants.name AS restaurant_name', 'dishes.type', 'dishes.rate', 'dishes.price', 'restaurants.id AS res_id')
+    ->groupBy('dishes.id', 'dishes.name', 'restaurants.name', 'dishes.type', 'dishes.rate', 'dishes.price', 'dishes.img','restaurants.id')
     ->orderByRaw('COUNT(orderItems.item_id) DESC')
     ->get();
 
-// Trả về danh sách kết quả
-return $topDishes;
+    // Trả về danh sách kết quả
+    return $topDishes;
     }
 
 
     function getRecent(Request $request)
     {
         try {
-            $list_item = Dishes::orderBy('created_at', 'desc')->get();
+            $list_item = Dishes::where('type', "Món chính")
+            ->orderBy('created_at', 'desc')->get();
             $list = [];
             foreach ($list_item as $item) {
                 $res_name = Restaurants::where('id', $item->restaurant_id)->first();
                         array_push($list, [
                             'id' => $item->id,
                             'restaurant_name' => $res_name->name,
+                            'res_id' => $res_name->id,
                             'name' => $item->name,
                             'img' => $item->img,
                             'price' =>$item->price,
@@ -225,5 +227,20 @@ function search(string $input, int $res_id)
             return $results;
         }
     }
+}
+
+function getDishesWithOrders(int $user_id) {
+
+    $res_id = DB::table('restaurants')
+                ->where('user_id', $user_id)->first()->id;
+
+    $dishes = DB::table('dishes')
+                ->where('restaurant_id', $res_id)
+                ->leftJoin('orderItems', 'dishes.id', '=', 'orderItems.item_id')
+                ->select('dishes.name', DB::raw('SUM(orderItems.quantity) as total_quantity'))
+                ->groupBy('dishes.name')
+                ->get();
+
+    return response()->json($dishes);
 }
 }

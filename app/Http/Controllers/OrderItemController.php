@@ -89,7 +89,6 @@ class OrderItemController extends Controller
             $res = Restaurants::where('id', $item->restaurant_id)->first();
             $user = User::where('id', $item->user_id)->first();
             $orders = OrdersItems::where('order_id', $item->id)->get();
-            
             $details = [];
             $money = [];
 
@@ -115,7 +114,7 @@ class OrderItemController extends Controller
                 'phone' => $user->phone,
                 'address' => $user->address,
                 'money' => $money,
-                'option' => $orders[0]->options,
+                'option' => isset($orders[0]) ? $orders[0]->options : null,
                 'dishes' => $details,
                 'created_at' => $item->created_at,
             ]);  
