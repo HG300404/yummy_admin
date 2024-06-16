@@ -14,7 +14,8 @@ class Reviews extends Model
         'restaurant_id',
         'user_id',
         'rating',
-        'comment'
+        'comment',
+        'order_id'
     ];
 
     protected function setKeysForSaveQuery($query)

@@ -14,6 +14,6 @@ class Cart extends Model
         'user_id',
         'item_id',
         'restaurant_id',
-        'quantity'
+        'quantity',
     ];
 }

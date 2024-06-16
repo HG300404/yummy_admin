@@ -33,9 +33,9 @@ class DishController extends Controller
             $res = Restaurants::where('user_id',$user_id)->first();
             $list_item = Dishes::where('restaurant_id',$res->id)->
             orderBy('rate', 'desc')->get();
-            // if (!$$list_item) {
-            //     return ["status" => "success", 'message' => 'Không có dữ liệu'];
-            // }
+            if (!$list_item) {
+                return ["status" => "success", 'message' => 'Không có dữ liệu'];
+            }
             $list = [];
             foreach ($list_item as $item) {
                         array_push($list, [
@@ -173,23 +173,57 @@ return $topDishes;
         }
     }
 
-    function search(string $input, int $res_id)
-    {
-        if (empty($input)) {
-            return ["status" => "error", 'message' => 'Vui lòng nhập từ khoá tìm kiếm'];
+    function searchDish(string $input)
+{
+    $list = [];
+    $dishes = [];
+    if (empty($input)) {
+        return ["status" => "error", 'message' => 'Vui lòng nhập từ khoá tìm kiếm'];
+    } else {
+        $results = Dishes::where('name', 'like', '%' . $input . '%')->get();
+
+        if ($results->isEmpty()) {
+            return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
         } else {
-            $results = Dishes::where(function ($query) use ($input) {
-                $columns = Schema::getColumnListing('dishes');
-                foreach ($columns as $column) {
-                    $query->orWhere($column, 'like', '%' . $input . '%');
-                }
-            })->where('restaurant_id', $res_id) ->get();
-        
-            if ($results->isEmpty()) {
-                return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
-            } else {
-                return $results;
+            $grouped_results = $results->groupBy('restaurant_id');            
+            foreach ($grouped_results as $restaurant_id => $dishes) {
+                $res = Restaurants::where('id', $restaurant_id)->first();
+                $list[] = [
+                    'res_id' => $res->id,
+                    'restaurant_name' => $res->name,
+                    'dishes' => $dishes->map(function ($dish){
+                        return [
+                            'dish_id' => $dish->id,
+                            'img' => $dish->img,
+                            'name' =>$dish->name,
+                            'price' =>$dish->price
+                        ];
+                    })->all()
+                ];
             }
+            
+            return $list;
         }
     }
+}
+
+function search(string $input, int $res_id)
+{
+    if (empty($input)) {
+        return ["status" => "error", 'message' => 'Vui lòng nhập từ khoá tìm kiếm'];
+    } else {
+        $results = Dishes::where(function ($query) use ($input) {
+            $columns = Schema::getColumnListing('dishes');
+            foreach ($columns as $column) {
+                $query->orWhere($column, 'like', '%' . $input . '%');
+            }
+        })->where('restaurant_id', $res_id) ->get();
+    
+        if ($results->isEmpty()) {
+            return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
+        } else {
+            return $results;
+        }
+    }
+}
 }
