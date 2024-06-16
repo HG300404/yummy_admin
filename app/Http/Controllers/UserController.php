@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    function register(Request $request)
+     function register(Request $request)
     {
         if (!$request->email) {
             return response()->json(["status" => "error", "message" => "Email is required"]);
@@ -27,29 +27,36 @@ class UserController extends Controller
         $user->password = Hash::make($request->input("password") ?? '');
         $user->role = $request->input('role') ?? 'user';
         $user->image = $request->input('image') ?? '';
-        $user->level = 1;
+$user->level = 1;
         $user->coin = 0;
         $user->save();
 
         return response()->json(["status" => "success", "message" => "Đăng ký thành công", "user" => $user]);
     }
-    
+
     function login(Request $request)
     {
-        if (!$request->email || !$request->password) {
+        if (!$request->email) {
             return response()->json(["status" => "error", "message" => "Enter missing information"]);
-        } 
+ }
+    
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             return response()->json(["status" => "error", "message" => "Email does not exist"]);
         }
-
-        if (!Hash::check($request->password, $user->password)) {
+    
+        // Check if the request is from Google login
+        if ($request->isGoogleLogin) {
+            return response()->json(["status" => "success", "user" => $user]);
+        }
+    
+        if (!$request->password || !Hash::check($request->password, $user->password)) {
             return response()->json(["status" => "error", "message" => "Wrong password"]);
         }
-
+    
         return response()->json(["status" => "success", "user" => $user]);
     }
+    
 
 
     function getAll(Request $request)

@@ -193,7 +193,7 @@ class ReviewController extends Controller
         }
     }
 
-     //Admin
+//Admin
      function totalRating(Request $request)
      {
          $list = DB::table('reviews')
