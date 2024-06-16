@@ -193,43 +193,44 @@ class ReviewController extends Controller
         }
     }
 
-    //Admin
-    function totalRating(Request $request)
-    {
-        $list = DB::table('reviews')
-        ->select('rating', DB::raw('count(rating) AS count'))
-        ->groupBy('rating')
-        ->get();
+   //Admin
+   function totalRating(Request $request)
+   {
+       $list = DB::table('reviews')
+       ->select('rating AS name', DB::raw('count(rating) AS count'))
+       ->groupBy('name')
+       ->get();
 
-    return response()->json($list);
-    }
+   return response()->json($list);
+   }
 
 
-    function countRegister(Request $request)
-    {
-        $userCount = User::count();
-        $restaurantCount = Restaurants::count();
+   function countRegister(Request $request)
+   {
+       $userCount = User::count();
+       $restaurantCount = Restaurants::count();
 
-        return response()->json([
-            'user_count' => $userCount,
-            'restaurant_count' => $restaurantCount
-        ]);
-    }
+       $response = [
+           ['name' => 'Khách đăng kí', 'Se' => $userCount],
+           ['name' => 'Chủ đăng kí', 'Se' => $restaurantCount],
+       ];
+       return response()->json($response);
+   }
 
-    //Owner
-    function totalRatingByOwner(int $user_id)
-    {
-        $res = Restaurants::where('user_id',$user_id)->first();
-        if (!$res) {
-            return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
-        }
+   //Owner
+   function totalRatingByOwner(int $user_id)
+   {
+       $res = Restaurants::where('user_id',$user_id)->first();
+       if (!$res) {
+           return ["status" => "success", 'message' => 'Không tìm thấy kết quả'];
+       }
 
-        $list = DB::table('reviews')
-        ->where('restaurant_id', $res->id)
-        ->select('rating', DB::raw('count(rating) AS count'))
-        ->groupBy('rating')
-        ->get();
+       $list = DB::table('reviews')
+       ->where('restaurant_id', $res->id)
+       ->select('rating AS name' , DB::raw('count(rating) AS count'))
+       ->groupBy('name')
+       ->get();
 
-    return response()->json($list);
-    }
+   return response()->json($list);
+   }
 }
